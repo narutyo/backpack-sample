@@ -1,0 +1,3 @@
+[submodule "submodules/backpack"]
+	path = submodules/backpack
+	url = git@github.com:narutyo/backpack.git
