@@ -1,0 +1,74 @@
+version: "3.3"
+networks:
+  backpack:
+    driver: bridge
+volumes:
+  backpack-mysql-volume:
+    driver: local
+services:
+  backpack-mysql:
+    container_name: backpack-mysql
+    build:
+      context: ./docker/mysql
+    networks:
+      - backpack
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+    logging:
+      driver: json-file
+      options:
+        max-size: "100m"
+        max-file: "2"
+    restart: "no"
+    ports:
+      - 13306:3306
+    volumes:
+      - backpack-mysql-volume:/var/lib/mysql
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci --default-authentication-plugin=mysql_native_password
+    environment:
+      TERM: linux
+      LANG: "C.UTF-8"
+      MYSQL_ROOT_PASSWORD: laravel
+      MYSQL_DATABASE: backpack
+      LOG_ROTATION_DAY: 7
+  backpack:
+    container_name: backpack
+    build:
+      context: ./docker/laravel
+    volumes:
+      - ./submodules/backpack:/var/www/backpack
+    networks:
+      - backpack
+    ports:
+      - "1080:80"
+    depends_on:
+      - backpack-mysql
+    environment:
+      APP_NAME: "backpack"
+      APP_ENV: local
+      APP_KEY: "base64:88xK1cVMGV1aSYjuRBv7umGn8aRd0GGJhNsmM/Jvf80="
+      APP_DEBUG: "true"
+      APP_URL: http://localhost:1080
+      DB_CONNECTION: mysql
+      DB_HOST: backpack-mysql
+      DB_PORT: 3306
+      DB_DATABASE: backpack
+      DB_USERNAME: root
+      DB_PASSWORD: laravel
+      MAIL_MAILER: smtp
+      MAIL_HOST: backpack-mailhog
+      MAIL_PORT: 1025
+      MAIL_USERNAME: null
+      MAIL_PASSWORD: null
+      MAIL_ENCRYPTION: 'false'
+      MAIL_FROM_ADDRESS: "backpack@localhost"
+      MAIL_FROM_NAME: "backpack"
+  backpack-mailhog:
+    image: mailhog/mailhog
+    container_name: backpack-mailhog
+    ports:
+      - 11025:1025
+      - 18025:8025
+    networks:
+      - backpack
