@@ -1,3 +1,4 @@
+```
 $ git clone git@github.com:narutyo/backpack-sample.git
 $ cd backpack-sample
 $ git submodule update --init --recursive
@@ -13,3 +14,4 @@ $ sudo find submodules/backpack/storage -type f -exec chmod 666 {} +
 # ２回目以降は --build 無しでOKです
 $ cd backpack
 $ docker-compose up -d
+```
