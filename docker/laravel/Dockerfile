@@ -6,7 +6,7 @@ ENV COMPOSER_ALLOW_SUPERUSER=1 \
 COPY --from=composer:2.0 /usr/bin/composer /usr/bin/composer
 
 RUN apt-get update && \
-apt-get install -y git libonig-dev zlib1g-dev libpng-dev libzip-dev libwebp-dev libjpeg62-turbo-dev libmcrypt-dev libfreetype6-dev && \
+apt-get install -y git unzip libonig-dev zlib1g-dev libpng-dev libzip-dev libwebp-dev libjpeg62-turbo-dev libmcrypt-dev libfreetype6-dev && \
 docker-php-ext-install pdo pdo_mysql && \
 docker-php-ext-install mysqli && docker-php-ext-enable mysqli && \
 docker-php-ext-install mbstring && docker-php-ext-enable mbstring && \
