@@ -6,6 +6,7 @@ $ git submodule foreach git checkout master
 $ docker-compose up -d --build
 
 # コンテナが立ち上がってから...
+※submodules/backpack直下にauth.jsonファイルを配置してください。
 $ docker-compose exec backpack composer install
 $ docker-compose exec backpack php artisan migrate --seed
 $ sudo find submodules/backpack/storage -type d -exec chmod 777 {} +
